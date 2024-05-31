@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.transpeed.car.mapper.WhiteTypeMapper">
+
+    <!-- 批量插入角色菜单关联信息 -->
+    <select id="findMaxValue" resultType="java.lang.Integer">
+        SELECT MAX(type_key) FROM t_car_white_type
+    </select>
+
+</mapper>
