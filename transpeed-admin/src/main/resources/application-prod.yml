@@ -1,0 +1,96 @@
+server:
+  port: 8101
+  servlet:
+    context-path: /transpeed/park
+    session:
+      timeout: 60000ms
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 200
+      min-spare: 10
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://172.16.13.176:3306/transpeed_heihe?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: test
+      password: runwell
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始连接数
+      initial-size: 5
+      # 最大连接池数量
+      max-active: 50
+      # 最小连接池数量
+      min-idle: 10
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      #Oracle需要打开注释
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      c-on-return: false
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+      #配置监控属性： 在druid-starter的： com.alibaba.druid.spring.boot.autoconfigure.stat包下进行的逻辑配置
+      web-stat-filter: # WebStatFilter配置，
+        enabled: true #默认为false，表示不使用WebStatFilter配置，就是属性名去短线
+        url-pattern: /* #拦截该项目下的一切请求
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico  #对这些请求放行
+        session-stat-enable: true
+        principal-session-name: session_name
+        principal-cookie-name: cookie_name
+      stat-view-servlet: # StatViewServlet配置
+        enabled: true #默认为false，表示不使用StatViewServlet配置，就是属性名去短线
+        url-pattern: /druid/*  #配置DruidStatViewServlet的访问地址。后台监控页面的访问地址
+        reset-enable: false #禁用HTML页面上的“重置”功能，会把所有监控的数据全部清空，一般不使用
+        login-username: admin #监控页面登录的用户名
+        login-password: 123456 #监控页面登录的密码
+        allow: 127.0.0.1  #IP白名单(没有配置或者为空，则允许所有访问)。允许谁访问druid后台，默认允许全部用户访问。
+        deny:  #IP黑名单 (存在共同时，deny优先于allow)。不允许谁访问druid后台
+      aop-patterns: com.lcf.service.* #Spring监控配置，说明请参考Druid Github Wiki，配置_Druid和Spring关联
+  redis:
+    database: 101
+    host: 172.16.13.176
+    password: runwell
+    port: 6379
+    timeout: 3000
+    lettuce:
+      pool:
+        #连接池最大链接数默认值为8
+        max-active: -1
+        #连接池最大阻塞时间（使用负值表示没有限制）默认为-1
+        max-wait: -1
+        #连接池中的最大空闲连接数 默认为8
+        max-idle: 100
+        #连接池中的最小空闲连接数 默认为0
+        min-idle: 0
+
+# 日志配置
+logging:
+  level:
+    com.transpeed: debug
+    org.springframework: warn
+
+# MyBatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.transpeed.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
